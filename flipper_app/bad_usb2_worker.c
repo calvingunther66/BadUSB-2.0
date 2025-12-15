@@ -5,11 +5,8 @@
 
 #define TAG "BadUsb2Worker"
 
-#include <furi_hal_resources.h>
-
 // --- SPI Configuration ---
 #define SPI_HANDLE &furi_hal_spi_bus_handle_external
-#define SPI_CS_PIN &gpio_ext_pa4
 #define SPI_TIMEOUT 100
 
 // GPIO for Handshake (Assuming PC3 for now)
@@ -22,8 +19,6 @@ typedef enum {
     WorkerEvtPauseResume = (1 << 2),
     WorkerEvtSpiIrq = (1 << 3), // Triggered by GPIO
 } WorkerEvents;
-
-typedef struct BadUsb2Worker BadUsb2Worker;
 
 struct BadUsb2Worker {
     FuriThread* thread;
@@ -63,9 +58,9 @@ static void handle_spi_transaction(BadUsb2Worker* worker) {
     furi_hal_spi_acquire(SPI_HANDLE);
     
     // 1. Read Request
-    furi_hal_gpio_write(SPI_CS_PIN, false);
+    furi_hal_gpio_write(SPI_HANDLE->cs, false);
     furi_hal_spi_bus_rx(SPI_HANDLE, (uint8_t*)&req, sizeof(SpiPacket), SPI_TIMEOUT);
-    furi_hal_gpio_write(SPI_CS_PIN, true);
+    furi_hal_gpio_write(SPI_HANDLE->cs, true);
     
     if (req.magic != BADUSB2_PROTOCOL_MAGIC) {
         furi_hal_spi_release(SPI_HANDLE);
@@ -87,9 +82,9 @@ static void handle_spi_transaction(BadUsb2Worker* worker) {
         
         furi_delay_us(50);
         
-        furi_hal_gpio_write(SPI_CS_PIN, false);
+        furi_hal_gpio_write(SPI_HANDLE->cs, false);
         furi_hal_spi_bus_tx(SPI_HANDLE, (uint8_t*)&resp, sizeof(SpiPacket), SPI_TIMEOUT);
-        furi_hal_gpio_write(SPI_CS_PIN, true);
+        furi_hal_gpio_write(SPI_HANDLE->cs, true);
         
     } else if (req.type == CMD_MSC_WRITE) {
          if (worker->iso_file && storage_file_is_open(worker->iso_file)) {
@@ -102,7 +97,6 @@ static void handle_spi_transaction(BadUsb2Worker* worker) {
 }
 
 static void send_hid_command(BadUsb2Worker* worker, uint8_t type, uint8_t keycode) {
-    UNUSED(worker);
     SpiPacket pkt;
     memset(&pkt, 0, sizeof(SpiPacket));
     pkt.magic = BADUSB2_PROTOCOL_MAGIC;
@@ -110,9 +104,9 @@ static void send_hid_command(BadUsb2Worker* worker, uint8_t type, uint8_t keycod
     pkt.address = keycode;
     
     furi_hal_spi_acquire(SPI_HANDLE);
-    furi_hal_gpio_write(SPI_CS_PIN, false);
+    furi_hal_gpio_write(SPI_HANDLE->cs, false);
     furi_hal_spi_bus_tx(SPI_HANDLE, (uint8_t*)&pkt, sizeof(SpiPacket), SPI_TIMEOUT);
-    furi_hal_gpio_write(SPI_CS_PIN, true);
+    furi_hal_gpio_write(SPI_HANDLE->cs, true);
     furi_hal_spi_release(SPI_HANDLE);
 }
 
@@ -228,8 +222,7 @@ BadUsbScript* bad_usb2_worker_open(FuriString* file_path) {
 }
 
 void bad_usb2_worker_close(BadUsbScript* worker) {
-     furi_thread_flags_set(furi_thread_get_id(worker->thread), WorkerEvtStop);
-     furi_thread_join(worker->thread);
+     furi_thread_terminate(worker->thread);
      furi_thread_free(worker->thread);
      furi_string_free(worker->file_path);
      furi_string_free(worker->layout_path);

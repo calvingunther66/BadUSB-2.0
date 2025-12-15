@@ -1,8 +1,7 @@
 #pragma once
 
 #include <gui/view.h>
-#include "../bad_usb2_worker.h"
-#include "../helpers/bad_usb_hid.h"
+#include "../helpers/ducky_script.h"
 
 typedef struct BadUsb BadUsb;
 typedef void (*BadUsbButtonCallback)(InputKey key, void* context);

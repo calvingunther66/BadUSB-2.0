@@ -79,11 +79,6 @@ static void bad_usb_app_tick_event_callback(void* context) {
     scene_manager_handle_tick_event(app->scene_manager);
 }
 
-void bad_usb_set_interface(BadUsbApp* app, BadUsbHidInterface interface) {
-    app->interface = interface;
-    bad_usb_view_set_interface(app->bad_usb_view, interface);
-}
-
 BadUsbApp* bad_usb_app_alloc(char* arg) {
     BadUsbApp* app = malloc(sizeof(BadUsbApp));
 

@@ -1,5 +1,5 @@
 #include "bad_usb_view.h"
-#include "../bad_usb2_worker.h"
+#include "../helpers/ducky_script.h"
 #include <toolbox/path.h>
 #include <gui/elements.h>
 #include <assets_icons.h>
@@ -42,9 +42,9 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
     furi_string_reset(disp_str);
 
     if(model->interface == BadUsbHidInterfaceBle) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 22, 24, &I_Bad_BLE_48x22);
+        canvas_draw_icon(canvas, 22, 24, &I_Bad_BLE_48x22);
     } else {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 22, 24, &I_UsbTree_48x22);
+        canvas_draw_icon(canvas, 22, 24, &I_UsbTree_48x22);
     }
 
     BadUsbWorkerState state = model->state.state;
@@ -74,22 +74,22 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
     }
 
     if(state == BadUsbStateNotConnected) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Clock_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Clock_18x18);
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 127, 31, AlignRight, AlignBottom, "Connect");
         canvas_draw_str_aligned(canvas, 127, 43, AlignRight, AlignBottom, "to device");
     } else if(state == BadUsbStateWillRun) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Clock_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Clock_18x18);
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 127, 31, AlignRight, AlignBottom, "Will run");
         canvas_draw_str_aligned(canvas, 127, 43, AlignRight, AlignBottom, "on connect");
     } else if(state == BadUsbStateFileError) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Error_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Error_18x18);
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 127, 31, AlignRight, AlignBottom, "File");
         canvas_draw_str_aligned(canvas, 127, 43, AlignRight, AlignBottom, "ERROR");
     } else if(state == BadUsbStateScriptError) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Error_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Error_18x18);
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 127, 33, AlignRight, AlignBottom, "ERROR:");
         canvas_set_font(canvas, FontSecondary);
@@ -104,15 +104,15 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
             canvas, 127, 56, AlignRight, AlignBottom, furi_string_get_cstr(disp_str));
         furi_string_reset(disp_str);
     } else if(state == BadUsbStateIdle) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Smile_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Smile_18x18);
         canvas_set_font(canvas, FontBigNumbers);
         canvas_draw_str_aligned(canvas, 114, 40, AlignRight, AlignBottom, "0");
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 117, 26, &I_Percent_10x14);
+        canvas_draw_icon(canvas, 117, 26, &I_Percent_10x14);
     } else if(state == BadUsbStateRunning) {
         if(model->anim_frame == 0) {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviSmile1_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviSmile1_18x21);
         } else {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviSmile2_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviSmile2_18x21);
         }
         canvas_set_font(canvas, FontBigNumbers);
         furi_string_printf(
@@ -120,18 +120,18 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
         canvas_draw_str_aligned(
             canvas, 114, 40, AlignRight, AlignBottom, furi_string_get_cstr(disp_str));
         furi_string_reset(disp_str);
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 117, 26, &I_Percent_10x14);
+        canvas_draw_icon(canvas, 117, 26, &I_Percent_10x14);
     } else if(state == BadUsbStateDone) {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviSmile1_18x21);
+        canvas_draw_icon(canvas, 4, 23, &I_EviSmile1_18x21);
         canvas_set_font(canvas, FontBigNumbers);
         canvas_draw_str_aligned(canvas, 114, 40, AlignRight, AlignBottom, "100");
         furi_string_reset(disp_str);
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 117, 26, &I_Percent_10x14);
+        canvas_draw_icon(canvas, 117, 26, &I_Percent_10x14);
     } else if(state == BadUsbStateDelay) {
         if(model->anim_frame == 0) {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviWaiting1_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviWaiting1_18x21);
         } else {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviWaiting2_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviWaiting2_18x21);
         }
         canvas_set_font(canvas, FontBigNumbers);
         furi_string_printf(
@@ -139,7 +139,7 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
         canvas_draw_str_aligned(
             canvas, 114, 40, AlignRight, AlignBottom, furi_string_get_cstr(disp_str));
         furi_string_reset(disp_str);
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 117, 26, &I_Percent_10x14);
+        canvas_draw_icon(canvas, 117, 26, &I_Percent_10x14);
         canvas_set_font(canvas, FontSecondary);
         furi_string_printf(disp_str, "delay %lus", model->state.delay_remain);
         canvas_draw_str_aligned(
@@ -147,9 +147,9 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
         furi_string_reset(disp_str);
     } else if((state == BadUsbStatePaused) || (state == BadUsbStateWaitForBtn)) {
         if(model->anim_frame == 0) {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviWaiting1_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviWaiting1_18x21);
         } else {
-            //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 23, &I_EviWaiting2_18x21);
+            canvas_draw_icon(canvas, 4, 23, &I_EviWaiting2_18x21);
         }
         canvas_set_font(canvas, FontBigNumbers);
         furi_string_printf(
@@ -157,12 +157,12 @@ static void bad_usb_draw_callback(Canvas* canvas, void* _model) {
         canvas_draw_str_aligned(
             canvas, 114, 40, AlignRight, AlignBottom, furi_string_get_cstr(disp_str));
         furi_string_reset(disp_str);
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 117, 26, &I_Percent_10x14);
+        canvas_draw_icon(canvas, 117, 26, &I_Percent_10x14);
         canvas_set_font(canvas, FontSecondary);
         canvas_draw_str_aligned(canvas, 127, 50, AlignRight, AlignBottom, "Paused");
         furi_string_reset(disp_str);
     } else {
-        //canvas_draw_icon(canvas, x, y, &Icon);canvas, 4, 26, &I_Clock_18x18);
+        canvas_draw_icon(canvas, 4, 26, &I_Clock_18x18);
     }
 
     furi_string_free(disp_str);

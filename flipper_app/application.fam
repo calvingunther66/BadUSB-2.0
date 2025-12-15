@@ -6,5 +6,5 @@ App(
     stack_size=2 * 1024,
     fap_category="GPIO",
     fap_icon="icon.png", 
-
+    sources=["*.c", "scenes/*.c", "views/*.c", "helpers/*.c"]
 )

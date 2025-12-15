@@ -18,7 +18,7 @@ void bad_usb_scene_error_on_enter(void* context) {
     BadUsbApp* app = context;
 
     if(app->error == BadUsbAppErrorNoFiles) {
-        widget_add_icon_element(app->widget, 0, 0, NULL);
+        widget_add_icon_element(app->widget, 0, 0, &I_SDQuestion_35x43);
         widget_add_string_multiline_element(
             app->widget,
             81,
@@ -30,7 +30,7 @@ void bad_usb_scene_error_on_enter(void* context) {
         widget_add_button_element(
             app->widget, GuiButtonTypeLeft, "Back", bad_usb_scene_error_event_callback, app);
     } else if(app->error == BadUsbAppErrorCloseRpc) {
-        widget_add_icon_element(app->widget, 78, 0, NULL);
+        widget_add_icon_element(app->widget, 78, 0, &I_ActiveConnection_50x64);
         widget_add_string_multiline_element(
             app->widget, 3, 2, AlignLeft, AlignTop, FontPrimary, "Connection\nIs Active!");
         widget_add_string_multiline_element(

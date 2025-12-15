@@ -1,4 +1,4 @@
-#include "../bad_usb2_worker.h"
+#include "../helpers/ducky_script.h"
 #include "../bad_usb_app_i.h"
 #include "../views/bad_usb_view.h"
 #include <furi_hal.h>
